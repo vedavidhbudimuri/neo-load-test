@@ -1,0 +1,6 @@
+fire==0.1.3
+
+# neo4j requirements
+py2neo
+neomodel==3.3.0
+
