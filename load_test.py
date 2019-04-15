@@ -115,8 +115,7 @@ def load_test(batch_size):
 
 class LoadTest():
 
-    @classmethod
-    def load_test(cls, batch_size=1000):
+    def load_test(self, batch_size=1000):
         load_test(batch_size)
 
 
