@@ -106,11 +106,11 @@ def load_test(batch_size):
 
     create_unique_constraints()
     load_posts()
-    load_users()
-    load_tags()
-    load_user_posts()
-    load_posts_rel()
-    load_tag_posts_rel()
+    # load_users()
+    # load_tags()
+    # load_user_posts()
+    # load_posts_rel()
+    # load_tag_posts_rel()
 
 
 class LoadTest():
