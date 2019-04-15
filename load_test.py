@@ -10,7 +10,7 @@ def log_time():
             print('Start Time: {} {}'.format(
                 func.__name__, datetime.datetime.now()))
             a = time.time()
-            func()
+            func(*args, **kwargs)
             b = time.time()
             print('End Time: {} {}'.format(
                 func.__name__, datetime.datetime.now()))
