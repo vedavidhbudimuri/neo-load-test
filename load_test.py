@@ -30,7 +30,7 @@ def load_test(batch_size):
         'neo4j', 'neon', 'localhost', 7687
     )
     options = "{batchSize: "+str(batch_size) + \
-        ", iterateList: true, parallel: true}"
+        ", iterateList: true, parallel: false}"
 
     def run_cypher(arg1, arg2):
         from neomodel import db
