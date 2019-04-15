@@ -1,4 +1,7 @@
 
+import fire
+
+
 def log_time():
     def decorator(func):
         def handler(*args, **kwargs):
@@ -20,13 +23,14 @@ def log_time():
 
 
 @log_time()
-def load_test():
+def load_test(batch_size):
     from neomodel import config
 
     config.DATABASE_URL = 'bolt://{}:{}@{}:{}'.format(
         'neo4j', 'neon', 'localhost', 7687
     )
-    options = "{batchSize: 10000, iterateList: true, parallel: true}"
+    options = "{batchSize: "+str(batch_size) + \
+        ", iterateList: true, parallel: true}"
 
     def run_cypher(arg1, arg2):
         from neomodel import db
@@ -99,7 +103,7 @@ def load_test():
         arg1 = 'CALL apoc.load.csv(\'file:///import/user_posts_rel.csv\') YIELD lineNo, map as row, list return row'
         arg2 = 'MATCH (post:Post {id:apoc.convert.toString(row.`:END_ID(Post)`)}) MATCH (owner:User {id:apoc.convert.toString(row.`:START_ID(User)`)}) MERGE (owner)-[:ASKED]->(post);'
         run_cypher(arg1, arg2)
-    
+
     create_unique_constraints()
     load_posts()
     load_users()
@@ -108,4 +112,13 @@ def load_test():
     load_posts_rel()
     load_tag_posts_rel()
 
-load_test()
+
+class LoadTest():
+
+    @classmethod
+    def load_test(cls, batch_size=1000):
+        load_test(batch_size)
+
+
+if __name__ == '__main__':
+    fire.Fire(LoadTest)
