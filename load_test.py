@@ -105,9 +105,9 @@ def load_test(batch_size):
         run_cypher(arg1, arg2)
 
     create_unique_constraints()
-    load_posts()
+    # load_posts()
     # load_users()
-    # load_tags()
+    load_tags()
     # load_user_posts()
     # load_posts_rel()
     # load_tag_posts_rel()
