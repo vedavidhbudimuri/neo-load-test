@@ -9,9 +9,10 @@ neo4j:
     - $HOME/neo4j/import:/import
   environment:
     - NEO4J_dbms_tx__state_memory__allocation=OFF_HEAP
-    - NEO4J_dbms_memory_pagecache_size=30G
-    - NEO4J_dbms_memory_heap_max__size=20G
-    - NEO4J_dbms_memory_heap_initial__size=20G
+    - NEO4J_dbms_tx__state_max__off__heap__memory=10G
+    - NEO4J_dbms_memory_pagecache_size=7G
+    - NEO4J_dbms_memory_heap_max__size=15G
+    - NEO4J_dbms_memory_heap_initial__size=15G
     - NEO4J_apoc_import_file_enabled=true
     - NEO4J_apoc_import_file_use_neo4j_config=true
     - NEO4J_dbms_security_allow_csv_import_from_file_urls=true
