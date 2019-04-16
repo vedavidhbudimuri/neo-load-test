@@ -31,16 +31,13 @@ def load_test(batch_size):
         'neo4j', 'neon', 'localhost', 7687
     )
     options = "{batchSize: "+str(batch_size) + \
-        ", iterateList: true, parallel: true}"
+            ", iterateList: true, parallel: true, concurrency: 100}"
 
     def run_cypher(arg1, arg2):
         query = """CALL apoc.periodic.iterate("{}","{}", {});""".format(
             arg1, arg2, options
         )
-        print('query: ', query)
         results, meta = db.cypher_query(query)
-        print('results: ', results)
-        print('meta: ', meta)
         return results, meta
 
     def clean_db():
@@ -53,6 +50,7 @@ def load_test(batch_size):
     def create_unique_constraints():
         from neomodel import db
         queries = [
+            "create index on :Post(id);",
             "create index on :Post(title);",
             "create index on :Post(createdAt);",
             "create index on :Post(score);",
@@ -60,12 +58,14 @@ def load_test(batch_size):
             "create index on :Post(favorites);",
             "create index on :Post(answers);",
             "create index on :Post(score);",
-
+        
+            "create index on :User(id);",
             "create index on :User(name);",
             "create index on :User(createdAt);",
             "create index on :User(reputation);",
             "create index on :User(age);",
-
+            
+            "create index on :Tag(id);",
             "create index on :Tag(count);",
 
             "create constraint on (t:Tag) assert t.tagId is unique;",
@@ -115,9 +115,9 @@ def load_test(batch_size):
 
     clean_db()
     create_unique_constraints()
-    # load_posts()
+    load_posts()
     # load_users()
-    load_tags()
+    # load_tags()
     # load_user_posts()
     # load_posts_rel()
     # load_tag_posts_rel()
