@@ -24,6 +24,7 @@ def log_time():
 
 @log_time()
 def load_test(batch_size):
+    from neomodel import db
     from neomodel import config
 
     config.DATABASE_URL = 'bolt://{}:{}@{}:{}'.format(
@@ -33,12 +34,19 @@ def load_test(batch_size):
         ", iterateList: true, parallel: true}"
 
     def run_cypher(arg1, arg2):
-        from neomodel import db
-
         query = """CALL apoc.periodic.iterate("{}","{}", {});""".format(
             arg1, arg2, options
         )
         results, meta = db.cypher_query(query)
+        print('results: ', results)
+        print('meta: ', meta)
+        return results, meta
+
+    def clean_db():
+        query = "MATCH (n) DETACH DELETE n"
+        results, meta = db.cypher_query(query)
+        print('results: ', results)
+        print('meta: ', meta)
         return results, meta
 
     def create_unique_constraints():
@@ -104,6 +112,7 @@ def load_test(batch_size):
         arg2 = 'MATCH (post:Post {id:apoc.convert.toString(row.`:END_ID(Post)`)}) MATCH (owner:User {id:apoc.convert.toString(row.`:START_ID(User)`)}) MERGE (owner)-[:ASKED]->(post);'
         run_cypher(arg1, arg2)
 
+    clean_db()
     create_unique_constraints()
     # load_posts()
     # load_users()
