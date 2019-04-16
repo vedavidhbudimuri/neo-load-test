@@ -37,6 +37,7 @@ def load_test(batch_size):
         query = """CALL apoc.periodic.iterate("{}","{}", {});""".format(
             arg1, arg2, options
         )
+        print('query: ', query)
         results, meta = db.cypher_query(query)
         print('results: ', results)
         print('meta: ', meta)
