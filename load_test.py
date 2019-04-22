@@ -31,7 +31,7 @@ def load_test(batch_size):
         'neo4j', 'neon', 'localhost', 7687
     )
     options = "{batchSize: "+str(batch_size) + \
-            ", iterateList: true, parallel: true, concurrency: 100}"
+            ", iterateList: true, parallel: true, concurrency: 50}"
 
     def run_cypher(arg1, arg2):
         query = """CALL apoc.periodic.iterate("{}","{}", {});""".format(
@@ -43,8 +43,6 @@ def load_test(batch_size):
     def clean_db():
         query = "MATCH (n) DETACH DELETE n"
         results, meta = db.cypher_query(query)
-        print('results: ', results)
-        print('meta: ', meta)
         return results, meta
 
     def create_unique_constraints():
@@ -86,7 +84,7 @@ def load_test(batch_size):
     @log_time()
     def load_users():
         arg1 = 'CALL apoc.load.csv(\'file:///import/users.csv\') YIELD lineNo, map as row, list return row'
-        arg2 = 'MERGE(owner:User {id: row.`userId: ID(User)`}) ON CREATE SET owner.displayname=row.displayname, owner.reputation=row.reputation,owner.aboutme=row.aboutme,owner.websiteurl=row.websiteurl,owner.location=row.location,owner.profileimageurl=row.profileimageurl,owner.views=row.views,owner.upvotes=row.upvotes,owner.downvotes=row.downvotes'
+        arg2 = 'MERGE(owner:User {id: row.`userId:ID(User)`}) ON CREATE SET owner.displayname=row.displayname, owner.reputation=row.reputation,owner.aboutme=row.aboutme,owner.websiteurl=row.websiteurl,owner.location=row.location,owner.profileimageurl=row.profileimageurl,owner.views=row.views,owner.upvotes=row.upvotes,owner.downvotes=row.downvotes;'
         run_cypher(arg1, arg2)
 
     @log_time()
@@ -109,18 +107,18 @@ def load_test(batch_size):
 
     @log_time()
     def load_user_posts():
-        arg1 = 'CALL apoc.load.csv(\'file:///import/user_posts_rel.csv\') YIELD lineNo, map as row, list return row'
+        arg1 = 'CALL apoc.load.csv(\'file:///import/users_posts_rel.csv\') YIELD lineNo, map as row, list return row'
         arg2 = 'MATCH (post:Post {id:apoc.convert.toString(row.`:END_ID(Post)`)}) MATCH (owner:User {id:apoc.convert.toString(row.`:START_ID(User)`)}) MERGE (owner)-[:ASKED]->(post);'
         run_cypher(arg1, arg2)
 
     clean_db()
     create_unique_constraints()
     load_posts()
-    # load_users()
-    # load_tags()
-    # load_user_posts()
-    # load_posts_rel()
-    # load_tag_posts_rel()
+    load_users()
+    load_tags()
+    load_user_posts()
+    load_posts_rel()
+    load_tag_posts_rel()
 
 
 class LoadTest():
